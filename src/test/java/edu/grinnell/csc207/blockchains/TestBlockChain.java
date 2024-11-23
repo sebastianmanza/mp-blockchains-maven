@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Samuel A. Rebelsky
  */
+@SuppressWarnings("unused")
 public class TestBlockChain {
   // +-----------+---------------------------------------------------
   // | Utilities |
