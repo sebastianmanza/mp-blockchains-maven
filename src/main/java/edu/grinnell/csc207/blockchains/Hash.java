@@ -1,6 +1,8 @@
 package edu.grinnell.csc207.blockchains;
 
 import java.util.Arrays;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Encapsulated hashes.
@@ -116,4 +118,15 @@ public class Hash {
   public int hashCode() {
     return Arrays.hashCode(hashData);
   } // hashCode()
+
+  public static Hash computeHash(String blockContents) {
+    try {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = digest.digest(blockContents.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        return new Hash(hashBytes);
+    } catch (NoSuchAlgorithmException e) {
+        throw new RuntimeException("SHA-256 is not on this system", e);
+    } // catch RuntimeException
+  } // computeHash(String blockContents)
 } // class Hash
