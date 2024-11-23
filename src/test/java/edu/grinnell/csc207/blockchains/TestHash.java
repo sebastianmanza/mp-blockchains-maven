@@ -18,6 +18,7 @@ public class TestHash {
   /**
    * Some basic tests.
    */
+  @SuppressWarnings("unlikely-arg-type")
   @Test
   public void basicTests() {
     Hash h = new Hash(new byte[] {1, 1, 2, 3, 5, 8});

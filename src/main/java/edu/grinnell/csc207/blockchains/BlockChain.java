@@ -154,11 +154,11 @@ public class BlockChain implements Iterable<Transaction> {
   public Iterator<Block> blocks() {
     return new Iterator<Block>() {
       public boolean hasNext() {
-        return false;
+        return false;   // STUB
       } // hasNext()
 
       public Block next() {
-        throw new NoSuchElementException();
+        throw new NoSuchElementException();     // STUB
       } // next()
     };
   } // blocks()
