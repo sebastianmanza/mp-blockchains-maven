@@ -1,15 +1,22 @@
 package edu.grinnell.csc207.blockchains;
 
+import java.util.Arrays;
+
 /**
  * Encapsulated hashes.
  *
- * @author Your Name Here
+ * @author Yash Malik
  * @author Samuel A. Rebelsky
  */
 public class Hash {
   // +--------+------------------------------------------------------
   // | Fields |
   // +--------+
+
+  /**
+   * The data for this hash.
+   */
+  private final byte[] hashData;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -22,7 +29,11 @@ public class Hash {
    *   The data to copy into the hash.
    */
   public Hash(byte[] data) {
-    // STUB
+    if (data == null) {
+      throw new IllegalArgumentException("Data cannot be null");
+    } // obviously
+    // Make a deep copy of the data to ensure encapsulation
+    this.hashData = Arrays.copyOf(data, data.length);
   } // Hash(byte[])
 
   // +---------+-----------------------------------------------------
@@ -35,7 +46,7 @@ public class Hash {
    * @return the number of bytes in the hash.
    */
   public int length() {
-    return 0;   // STUB
+    return hashData.length;
   } // length()
 
   /**
@@ -48,7 +59,10 @@ public class Hash {
    * @return the ith byte
    */
   public byte get(int i) {
-    return 0;   // STUB
+    if (i < 0 || i >= hashData.length) {
+      throw new IndexOutOfBoundsException("Index " + i + " out of bounds");
+    }  // overly cautious error check
+    return hashData[i];
   } // get()
 
   /**
@@ -58,7 +72,7 @@ public class Hash {
    * @return a copy of the bytes in the hash.
    */
   public byte[] getBytes() {
-    return new byte[] {1, 2, 3, 4, 5};      // STUB
+    return Arrays.copyOf(hashData, hashData.length);
   } // getBytes()
 
   /**
@@ -67,7 +81,11 @@ public class Hash {
    * @return the hash as a hex string.
    */
   public String toString() {
-    return "";          // STUB
+    StringBuilder hexString = new StringBuilder();
+    for (byte b : hashData) {
+      hexString.append(String.format("%02X", b));
+    }  // Originally used "%02x" but failed one test and took an hour to debug 
+    return hexString.toString();
   } // toString()
 
   /**
@@ -80,7 +98,14 @@ public class Hash {
    *   otherwise.
    */
   public boolean equals(Object other) {
-    return false;       // STUB
+    if (this == other) {
+      return true;
+    }  // obviously
+    if (other == null || other.getClass() != this.getClass()) {
+      return false;
+    }  // hash might match but be for different things
+    Hash otherHash = (Hash) other;
+    return Arrays.equals(this.hashData, otherHash.hashData);
   } // equals(Object)
 
   /**
@@ -89,6 +114,6 @@ public class Hash {
    * @return the hash code.
    */
   public int hashCode() {
-    return this.toString().hashCode();
+    return Arrays.hashCode(hashData);
   } // hashCode()
 } // class Hash
