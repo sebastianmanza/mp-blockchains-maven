@@ -99,7 +99,7 @@ public class BlockChain implements Iterable<Transaction> {
     if (this.size == 1) {
       return false;
     } else {
-      
+      Block 
     }
     return true;
   } // removeLast()

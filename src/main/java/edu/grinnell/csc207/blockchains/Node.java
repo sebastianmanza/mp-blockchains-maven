@@ -15,5 +15,6 @@ public class Node {
 
     public Block getBlock() {
         return this.current;
+        
     }
 }
