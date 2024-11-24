@@ -13,6 +13,12 @@ public class BlockChain implements Iterable<Transaction> {
   // | Fields |
   // +--------+
 
+  Node head;
+  Node tail;
+  int size;
+  HashValidator check;
+
+
   // +--------------+------------------------------------------------
   // | Constructors |
   // +--------------+
@@ -24,7 +30,14 @@ public class BlockChain implements Iterable<Transaction> {
    *   The validator used to check elements.
    */
   public BlockChain(HashValidator check) {
-    // STUB
+    byte[] arr = new byte[0];
+    Hash prevHash = new Hash(arr);
+    Transaction transaction = new Transaction("", "", 0);
+    Block newBlock = new Block(0, transaction, prevHash, check);
+    this.head = new Node(newBlock);
+    this.tail = this.head;
+    this.size = 1;
+    this.check = check;
   } // BlockChain(HashValidator)
 
   // +---------+-----------------------------------------------------
@@ -45,7 +58,8 @@ public class BlockChain implements Iterable<Transaction> {
    * @return a new block with correct number, hashes, and such.
    */
   public Block mine(Transaction t) {
-    return new Block(10, t, new Hash(new byte[] {7}), 11);       // STUB
+    Block addBlock = new Block(this.size, t, this.tail.getBlock().getHash(), this.check);
+    return addBlock;
   } // mine(Transaction)
 
   /**
@@ -54,7 +68,7 @@ public class BlockChain implements Iterable<Transaction> {
    * @return the number of blocks in the chain, including the initial block.
    */
   public int getSize() {
-    return 2;   // STUB
+    return this.size;
   } // getSize()
 
   /**
@@ -68,7 +82,10 @@ public class BlockChain implements Iterable<Transaction> {
    *   hash is incorrect.
    */
   public void append(Block blk) {
-    // STUB
+    Node newBlock = new Node(blk);
+    this.tail.next = newBlock;
+    this.tail = this.tail.next;
+    this.size++;
   } // append()
 
   /**
@@ -79,7 +96,12 @@ public class BlockChain implements Iterable<Transaction> {
    *   is removed).
    */
   public boolean removeLast() {
-    return true;        // STUB
+    if (this.size == 1) {
+      return false;
+    } else {
+      
+    }
+    return true;
   } // removeLast()
 
   /**
@@ -88,7 +110,7 @@ public class BlockChain implements Iterable<Transaction> {
    * @return the hash of the last sblock in the chain.
    */
   public Hash getHash() {
-    return new Hash(new byte[] {2, 0, 7});   // STUB
+    return this.tail.getBlock().getHash();
   } // getHash()
 
   /**
