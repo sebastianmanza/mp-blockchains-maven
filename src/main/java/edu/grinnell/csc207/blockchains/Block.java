@@ -64,8 +64,9 @@ public class Block {
     try {
       this.nonce = mine(num, prevHash, transaction, check);
     } catch (Exception NoSuchAlgorithmException) {
+
     } //try/catch
-    this.hash = this.computeHash();
+
 
     /* Mine for the nonce */
 
@@ -84,7 +85,7 @@ public class Block {
    *                    The nonce of the block.
    */
   public Block(int num, Transaction transaction, Hash prevHash, long nonce) {
-    this.nonce = nonce;
+    this.num = num;
     this.transaction = transaction;
     this.prevHash = prevHash;
     this.nonce = nonce;
@@ -103,17 +104,20 @@ public class Block {
   Hash computeHash() {
     try {
       MessageDigest md = MessageDigest.getInstance("sha-256");
-      md.update(ByteBuffer.allocate(Integer.BYTES).putInt(this.num).array());
-      md.update(this.prevHash.getBytes());
-      md.update(this.transaction.getSource().getBytes());
-      md.update(this.transaction.getTarget().getBytes());
-      md.update(ByteBuffer.allocate(Integer.BYTES).putInt(this.transaction.getAmount()).array());
-      md.update(ByteBuffer.allocate(Integer.BYTES).putLong(this.nonce).array());
 
-      Hash hash = new Hash(md.digest());
+      md.update(ByteBuffer.allocate(Integer.BYTES).putInt(this.num).array());
+      md.update(transaction.getSource().getBytes());
+      md.update(transaction.getTarget().getBytes());
+      md.update(ByteBuffer.allocate(Integer.BYTES).putInt(transaction.getAmount()).array());
+      md.update(prevHash.getBytes());
+      md.update(ByteBuffer.allocate(Long.BYTES).putLong(nonce).array());
+
+      Hash returnhash = new Hash(md.digest());
+      return returnhash;
+
     } catch (Exception e) {
+      throw new RuntimeException();
     } // try/catch
-    return hash;
   } // computeHash()
 
   // +---------+-----------------------------------------------------
@@ -171,10 +175,21 @@ public class Block {
    * @return a string representation of the block.
    */
   public String toString() {
-    String returnStr = "Transaction: [Source: " + transaction.getSource() + ", Target: " + transaction.getTarget()
-        + "Amount: " + transaction.getAmount() +
-        "], Nonce: " + this.nonce + ", prevHash: " + this.prevHash + "hash: " + this.hash;
-    return returnStr;
+    String src = this.transaction.getSource();
+    if (src.equals("")) {
+      src = "Deposit";
+    } //if
+    String returnStr = String.format(
+      "Block #%d:\n  Transaction: [Source: %s, Target: %s, Amount: %d]\n  Nonce: %d\n  Previous Hash: %s\n  Hash: %s",
+      this.num, 
+      src, 
+      this.transaction.getTarget(), 
+      this.transaction.getAmount(), 
+      this.nonce, 
+      this.prevHash, 
+      this.hash
+  );
+  return returnStr;
   } // toString()
 
   long mine(int blockNum, Hash previousHash, Transaction transaction, HashValidator valid)
@@ -185,15 +200,16 @@ public class Block {
       long nonce = rand.nextLong();
       MessageDigest md = MessageDigest.getInstance("sha-256");
       md.update(ByteBuffer.allocate(Integer.BYTES).putInt(blockNum).array());
-      md.update(previousHash.getBytes());
       md.update(transaction.getSource().getBytes());
       md.update(transaction.getTarget().getBytes());
       md.update(ByteBuffer.allocate(Integer.BYTES).putInt(transaction.getAmount()).array());
+      md.update(previousHash.getBytes());
       md.update(ByteBuffer.allocate(Long.BYTES).putLong(nonce).array());
 
       Hash hash = new Hash(md.digest());
 
       if (valid.isValid(hash)) {
+        this.hash = hash;
         break;
       } // if
 

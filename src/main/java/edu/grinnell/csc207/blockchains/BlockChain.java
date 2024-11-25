@@ -16,7 +16,7 @@ public class BlockChain implements Iterable<Transaction> {
   /**
    * The head of the BlockChain
    */
-  Node head;
+  public Node head;
   /**
    * The end of the BlockChain
    */
@@ -99,7 +99,7 @@ public class BlockChain implements Iterable<Transaction> {
       throw new IllegalArgumentException("Hash is not valid.");
     } //if
 
-    if (!blk.getHash().equals(blk.computeHash())) {
+    if (blk.computeHash().equals(blk.getHash())) {
       throw new IllegalArgumentException("Hash is not appropriate for its contents.");
     } //if
 
@@ -212,6 +212,9 @@ public class BlockChain implements Iterable<Transaction> {
       curNode = curNode.next;
     } //while
     UserDataBaseNode node = dataBase.findUser(user);
+    if (node == null) {
+      return 0;
+    }
     return node.getUserBalance();
   } // balance()
 
@@ -222,14 +225,20 @@ public class BlockChain implements Iterable<Transaction> {
    */
   public Iterator<Block> blocks() {
     return new Iterator<Block>() {
+      Node current = head;
       public boolean hasNext() {
-        return ;
+        return (current != null);
       } // hasNext()
 
       public Block next() {
-        throw new NoSuchElementException(); // STUB
+      if (!this.hasNext()) {
+        throw new NoSuchElementException();
+      } 
+      Block block = current.getBlock();
+      current = current.next;
+      return block;
       } // next()
-    };
+    }; //Iterator
   } // blocks()
 
   /**
@@ -238,14 +247,19 @@ public class BlockChain implements Iterable<Transaction> {
    * @return an iterator for all the blocks in the chain.
    */
   public Iterator<Transaction> iterator() {
-    
     return new Iterator<Transaction>() {
+      Node current = head;
       public boolean hasNext() {
-        return false; // STUB
+        return (current != null);
       } // hasNext()
 
       public Transaction next() {
-        throw new NoSuchElementException(); // STUB
+        if (!this.hasNext()) {
+        throw new NoSuchElementException();
+        }
+        Transaction transaction = current.getBlock().getTransaction();
+        current = current.next;
+        return transaction;
       } // next()
     };
   } // iterator()

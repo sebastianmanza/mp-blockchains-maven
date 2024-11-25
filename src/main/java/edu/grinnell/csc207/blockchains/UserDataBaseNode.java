@@ -2,6 +2,7 @@ package edu.grinnell.csc207.blockchains;
 
 /**
  * A basic class that stores a user and balance in a singly linked list.
+ * @author Sebastian Manza
  */
 public class UserDataBaseNode {
     String userName;

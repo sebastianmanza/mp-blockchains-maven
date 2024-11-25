@@ -27,7 +27,7 @@ public class UserDataBase {
         UserDataBaseNode targ = findUser(transaction.getTarget());
 
         /* If the source was not found and it wasn't an empty string, its invalid */
-        if (src == null && (!src.userName.equals(""))) {
+        if (src == null) {
             return false;
         } //if
 
