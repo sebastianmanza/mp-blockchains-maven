@@ -35,7 +35,7 @@ public class UserDataBase {
         if (targ == null) {
             targ = new UserDataBaseNode(transaction.getTarget());
             targ.nextUser = this.head;
-            targ = this.head;
+            this.head = targ;
         } //if
 
         if(!src.userName.equals("")) {
